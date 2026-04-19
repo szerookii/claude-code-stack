@@ -6,11 +6,6 @@ This is my personal workspace for testing and refining [Claude Code](https://cod
 
 You can initialize any project with this setup using a single command.
 
-### Bun (Recommended)
-```bash
-bun -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
-```
-
 ### Node.js (18+)
 ```bash
 node -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
