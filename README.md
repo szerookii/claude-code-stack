@@ -1,10 +1,10 @@
 # Claude Code Stack (Personal Sandbox)
 
-This is my personal, evolving configuration for [Claude Code](https://code.anthropic.com/). I use this repository to test and refine senior-level AI instructions, specialized rules, and agent orchestration workflows.
+This is my personal workspace for testing and refining [Claude Code](https://code.anthropic.com/) configurations. I use this repository to organize my project instructions, rules, and automation scripts.
 
 ## 🚀 Quick Bootstrap
 
-I can instantly initialize any project with this setup via the terminal. Works with **Bun** (recommended) or **Node.js**.
+I use this script to quickly initialize new or existing projects with my preferred configuration.
 
 ### Using Bun
 ```bash
@@ -16,42 +16,42 @@ bun run https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup
 node -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
 ```
 
-## 🎯 Focus & Testing
+## 🎯 Main Features
 
-My primary goal is to experiment with AI-driven development efficiency. This setup includes:
+This setup is built to automate the repetitive parts of project initialization:
 
-- **Interactive Setup**: A clean CLI to cherry-pick rules for specific test projects.
-- **Environment Detection**: Automatic check and installation for Claude Code via npm, pnpm, bun, or yarn.
-- **Skill Laboratory**: Optional integration for experimental tools:
-  - `caveman`: Advanced token compression for ultra-terse AI communication.
-  - `cavemem`: Shared persistent memory for long-term agent context.
-  - `ui-ux-pro-max`: Design intelligence for rapid UI prototyping.
-- **Standardized Rules**: 10+ rules (`.claude/rules/`) formatted to the official Claude Code specifications.
+- **Interactive Setup**: A CLI to pick exactly which rules to apply to a project.
+- **Environment Check**: Verifies if Claude Code is installed and helps set it up if needed.
+- **Skill Integration**: Optional installation for my experimental tools:
+  - `caveman`: Token compression for terser communication.
+  - `cavemem`: Local memory for cross-session context.
+  - `ui-ux-pro-max`: Design intelligence for UI generation.
+- **Structured Rules**: 10+ rule files (`.claude/rules/`) formatted for Claude Code.
 
-## 🤖 Agentic Architecture
+## 🤖 Agentic Workflow
 
-This stack transforms Claude into a **Senior Orchestrator**. Instead of handling everything directly, it is instructed to delegate and manage sub-agents:
+This configuration encourages Claude to act as an orchestrator by using delegation:
 
-1. **Strategic Delegation**: Deep research is delegated to the `codebase_investigator` sub-agent, and repetitive batch tasks (3+ files) to the `generalist` sub-agent.
-2. **Compression Mastery**: Uses `caveman` to keep token usage minimal and focus on code over conversation.
-3. **Knowledge Sync**: Uses `cavemem` as a central "brain" to sync decisions and facts between the orchestrator and all sub-agents.
+1. **Strategic Delegation**: Deep research is handled by `codebase_investigator`, and batch tasks (3+ files) by the `generalist` sub-agent.
+2. **Compression**: Uses `caveman` to prioritize code and technical results over long conversations.
+3. **Context Sync**: Uses `cavemem` to maintain facts and decisions across different agent sessions.
 
 ## 🛠️ Rule Arsenal
 
 | Rule | Focus |
 | :--- | :--- |
-| **typescript.md** | Strict typing and Svelte 5 Runes. |
-| **svelte.md** | SvelteKit patterns and Tailwind CSS tokens. |
-| **golang.md** | Idiomatic Go, error handling, and concurrency. |
+| **typescript.md** | Type safety and Svelte 5 Runes. |
+| **svelte.md** | SvelteKit patterns and Tailwind tokens. |
+| **golang.md** | Idiomatic Go and error handling. |
 | **git-conventions.md** | Atomic commits and Conventional Commits. |
-| **security.md** | Hardened standards and input validation. |
-| **performance.md** | Bundle optimization and resource efficiency. |
-| **database.md** | Non-destructive migrations and indexing. |
+| **security.md** | Basic security standards and validation. |
+| **performance.md** | Optimization and resource efficiency. |
+| **database.md** | Migrations and indexing. |
 | **testing.md** | Table-driven tests (Go) and Vitest (TS). |
-| **devops.md** | Optimized Docker builds and CI workflows. |
+| **devops.md** | Docker builds and CI workflows. |
 | **javascript.md** | Modern ES6+ standards and JSDoc. |
-| **prisma.md** | Schema naming, migrations, and singleton patterns. |
-| **drizzle.md** | Type-safe inference and schema splitting. |
+| **prisma.md** | Schema patterns and client singletons. |
+| **drizzle.md** | Type-safe inference and schema organization. |
 
 ## 📄 License
 
