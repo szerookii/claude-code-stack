@@ -29,3 +29,4 @@ When the user asks for an atomic commit or uses the `/atomic-commit` command, fo
 - **Atomicity**: Never mix unrelated changes (e.g., don't mix a bug fix with a new feature).
 - **Imperative**: "add", not "added" or "adds".
 - **No Global Add**: Do not use `git add .` unless the entire diff belongs to a single logical change.
+- **No Co-Author**: Never add co-author field on the commit.
