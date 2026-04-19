@@ -8,8 +8,6 @@ You can initialize any project with this setup using a single command.
 
 ### Bun (Recommended)
 ```bash
-bun run https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js
-# OR
 bun -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
 ```
 
