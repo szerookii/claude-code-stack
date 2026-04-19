@@ -4,14 +4,16 @@ This is my personal workspace for testing and refining [Claude Code](https://cod
 
 ## 🚀 Quick Bootstrap
 
-I use this script to quickly initialize new or existing projects with my preferred configuration.
+You can initialize any project with this setup using a single command.
 
-### Using Bun
+### Bun (Recommended)
 ```bash
 bun run https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js
+# OR
+bun -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
 ```
 
-### Using Node.js
+### Node.js (18+)
 ```bash
 node -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
 ```
