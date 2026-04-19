@@ -1,6 +1,6 @@
 # Claude Code Stack (Personal Sandbox)
 
-This is my personal, evolving configuration for [Claude Code](https://code.anthropic.com/). I use this repository to test and refine AI instructions, specialized rules, and developer skills for various tech stacks.
+This is my personal, evolving configuration for [Claude Code](https://code.anthropic.com/). I use this repository to test and refine senior-level AI instructions, specialized rules, and agent orchestration workflows.
 
 ## 🚀 Quick Bootstrap
 
@@ -28,14 +28,13 @@ My primary goal is to experiment with AI-driven development efficiency. This set
   - `ui-ux-pro-max`: Design intelligence for rapid UI prototyping.
 - **Standardized Rules**: 10+ rules (`.claude/rules/`) formatted to the official Claude Code specifications.
 
-## 🤖 Ecosystem & Agents
+## 🤖 Agentic Architecture
 
-This stack is optimized for my specific AI workflow:
+This stack transforms Claude into a **Senior Orchestrator**. Instead of handling everything directly, it is instructed to delegate and manage sub-agents:
 
-- **Claude Code**: Primary agent for development and command execution.
-- **Caveman**: Enforces "caveman-speak" to minimize token overhead.
-- **Cavemem**: Cross-agent memory system used for long-term context persistence.
-- **RTK (Rust Token Killer)**: Automatic CLI output compression.
+1. **Strategic Delegation**: Deep research is delegated to the `codebase_investigator` sub-agent, and repetitive batch tasks (3+ files) to the `generalist` sub-agent.
+2. **Compression Mastery**: Uses `caveman` to keep token usage minimal and focus on code over conversation.
+3. **Knowledge Sync**: Uses `cavemem` as a central "brain" to sync decisions and facts between the orchestrator and all sub-agents.
 
 ## 🛠️ Rule Arsenal
 
@@ -51,6 +50,8 @@ This stack is optimized for my specific AI workflow:
 | **testing.md** | Table-driven tests (Go) and Vitest (TS). |
 | **devops.md** | Optimized Docker builds and CI workflows. |
 | **javascript.md** | Modern ES6+ standards and JSDoc. |
+| **prisma.md** | Schema naming, migrations, and singleton patterns. |
+| **drizzle.md** | Type-safe inference and schema splitting. |
 
 ## 📄 License
 

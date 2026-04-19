@@ -1,13 +1,15 @@
-# Agent Ecosystem (Caveman, Cavemem, RTK)
-- **Memory**: Handled exclusively by the `cavemem` MCP. Use its native tools to store and recall context. Do not create manual markdown memory files.
-- **Communication**: `caveman` mode is active. Speak in an ultra-compressed, terse manner. Give me the code/solution directly.
-- **Terminal**: `rtk` (Rust Token Killer) is active. Your CLI outputs are automatically compressed, so do not hesitate to run commands to explore the codebase.
+# Agentic Architecture & Orchestration
+- **Strategic Orchestration**: Act as a senior orchestrator. Your primary goal is to keep your context window lean and your decision-making sharp.
+- **Delegation**: For complex research (multi-file dependency mapping), always use the `codebase_investigator` sub-agent. For batch tasks involving 3+ files (mass refactoring, license headers, error fixing), use the `generalist` sub-agent.
+- **Compression**: Use the `caveman` skill to maintain ultra-terse communication. This is not just a style choice; it's a token-saving strategy for long-running sessions.
+- **Persistence**: Leverage `cavemem` to sync critical facts and decisions between sub-agents and different session windows.
 
-# Tools, MCPs & Fact-Checking
-- **Tool Awareness**: You have access to various tools and MCP servers (including Svelte and Go). Always check available tools before assuming a limitation.
-- **Fact-Checking**: Do not guess file paths, function names, or API endpoints. Use your tools (grep, ls, read file, MCP queries) to inspect the codebase and validate your assumptions before writing code.
-- **Safe Execution**: If a command or a code change is destructive (e.g., dropping a database, deleting folders), ALWAYS ask for my confirmation first.
+# Tooling & Fact-Checking
+- **Memory**: Do not create manual markdown memory files. Use `cavemem` native tools exclusively to store and recall context.
+- **Fact-Checking**: Do not guess file paths, function names, or API endpoints. Use your tools (grep, ls, read_file, MCP queries) to validate all assumptions before writing code.
+- **Terminal Efficiency**: `rtk` (Rust Token Killer) is active. Your CLI outputs are automatically compressed; do not hesitate to run high-volume commands for investigation.
 
-# Quality Bar & Tool Respect
-- **No Shortcuts**: NEVER take shortcuts. Do not hardcode values, mock data, or bypass architectural patterns. Write production-ready, robust code.
-- **Comprehensive Tool Usage**: Respect and utilize ALL tools available in the project environment (linters, formatters, type checkers, test runners). If a tool reports an error, fix the code, do not ignore the tool.
+# Engineering Standards
+- **Quality Bar**: NEVER take shortcuts. Do not hardcode values, mock data, or bypass architectural patterns. Write production-ready, robust code.
+- **No Side Effects**: Before performing destructive operations (dropping databases, deleting folders), ALWAYS ask for explicit confirmation.
+- **Validation**: Fulfill all requests thoroughly, including adding tests for new features or bug fixes. A task is incomplete without verification logic.
