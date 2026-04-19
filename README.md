@@ -40,8 +40,8 @@ This configuration transforms Claude into an orchestrator:
 | Rule/Skill | Focus |
 | :--- | :--- |
 | **atomic-commit** (Skill) | Logical breakdown of changes into atomic commits. |
-| **typescript.md** | Type safety and Svelte 5 Runes. |
-| **svelte.md** | SvelteKit patterns and Tailwind tokens. |
+| **typescript.md** | Type safety, strict typing, and Zod validation. |
+| **svelte.md** | SvelteKit patterns, Svelte 5 Runes, and Tailwind tokens. |
 | **golang.md** | Idiomatic Go and error handling. |
 | **security.md** | Basic security standards and validation. |
 | **performance.md** | Optimization and resource efficiency. |

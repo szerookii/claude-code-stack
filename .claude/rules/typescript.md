@@ -9,7 +9,6 @@ description: TypeScript coding standards and type safety rules
 - **Explicit Returns**: Always declare return types for functions, especially public APIs and complex logic.
 - **Discriminated Unions**: Use discriminated unions for complex state or API responses to ensure exhaustive checks.
 - **Type Guards**: Use custom type guards (`isX(val): val is X`) to narrow down types in conditionals.
-- **Svelte 5 Integration**: When working with Svelte 5, use `$state` and `$props` runes with proper TypeScript annotations. Define component props as interfaces.
 - **Zod Validation**: Use Zod for runtime type checking of external data (API, forms, user input).
 - **Utility Types**: Leverage built-in utility types like `Partial`, `Pick`, `Omit`, and `Record` to avoid duplication.
 - **No Casts**: Avoid `as` type assertions unless absolutely necessary (e.g., third-party library limitations). Prefer narrowing.
