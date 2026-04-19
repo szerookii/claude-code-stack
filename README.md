@@ -6,15 +6,13 @@ This is my personal workspace for testing and refining [Claude Code](https://cod
 
 You can initialize any project with this setup using a single command.
 
-### Bun (Recommended)
-```bash
-bun -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
-```
-
 ### Node.js (18+)
 ```bash
 node -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/main/setup.js').then(r=>r.text()).then(eval)"
 ```
+
+### 🔄 Update or Uninstall
+To update your rules/skills or uninstall the stack from a project, simply run the command above again. The installer will detect the existing installation and offer to **Reapply/Update** or **Uninstall**.
 
 ## 🎯 Main Features
 
@@ -26,6 +24,7 @@ This setup automates the repetitive parts of project initialization:
   - `caveman`: Token compression for terser communication.
   - `cavemem`: Local memory for cross-session context.
   - `ui-ux-pro-max`: Design intelligence for UI generation.
+  - `rtk`: Rust Token Killer for command rewriting and token savings (requires Rust/Cargo).
 - **Structured Knowledge**: 10+ rule files (`.claude/rules/`) and custom skills (`.claude/skills/`).
 
 ## 🤖 Agentic Workflow

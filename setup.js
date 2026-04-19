@@ -59,14 +59,36 @@ async function select(msg, opts, multi = false) {
 
 async function setup() {
     console.log(`\n${C.bold}${C.cyan}⚡ Claude Code Stack Installer${C.rst}\n${C.dim}============================${C.rst}`);
-    let manager = "npm";
     
+    const target = path.resolve((await ask("Target directory path (default: .)")) || ".");
+    const isExisting = fs.existsSync(path.join(target, "CLAUDE.md")) || fs.existsSync(path.join(target, ".claude"));
+
+    if (isExisting) {
+        const action = await select("Existing installation detected. What would you like to do?", ["Reapply/Update", "Uninstall", "Cancel"]);
+        if (action === "Cancel") process.exit(0);
+        if (action === "Uninstall") {
+            log.step("Uninstalling...");
+            const filesToRemove = ["CLAUDE.md", ".claude/rules", ".claude/skills"];
+            for (const f of filesToRemove) {
+                const p = path.join(target, f);
+                if (fs.existsSync(p)) {
+                    fs.rmSync(p, { recursive: true, force: true });
+                    log.success(`Removed ${f}`);
+                }
+            }
+            log.info("Note: Global tools (rtk, caveman, etc.) are not removed.");
+            log.success("Uninstall complete!");
+            process.exit(0);
+        }
+    }
+
+    let manager = "npm";
     log.step("Checking Environment");
     if (isInstalled('claude -v')) log.success("Claude Code is installed");
     else {
         log.warn("Claude Code is not installed");
         if ((await ask("Install Claude Code now? (y/n)")).toLowerCase() === 'y') {
-            manager = await select("Choose your package manager:", ["npm", "pnpm", "bun", "yarn"]);
+            manager = await select("Choose your package manager:", ["npm", "pnpm", "yarn"]);
             execSync(`${manager} ${manager === 'yarn' ? 'global add' : 'install -g'} @anthropic-ai/claude-code`, { stdio: 'inherit' });
         }
     }
@@ -78,6 +100,10 @@ async function setup() {
         { name: 'ui-ux-pro-max', check: 'uipro --version', installed: false }
     ];
 
+    if (isInstalled('cargo --version')) {
+        skills.push({ name: 'rtk', check: 'rtk --version', installed: false });
+    }
+
     for (let s of skills) {
         s.installed = isInstalled(s.check);
         if (s.installed) log.success(`${s.name} is already installed`);
@@ -87,8 +113,13 @@ async function setup() {
     const missingSkills = skills.filter(s => !s.installed).map(s => s.name);
     if (missingSkills.length > 0) {
         if ((await ask(`Install missing tools (${missingSkills.join(', ')})? (y/n)`)).toLowerCase() === 'y') {
+            if (manager === 'npm' && !isInstalled('npm -v')) {
+                 manager = await select("Choose your package manager:", ["npm", "pnpm", "yarn"]);
+            }
             const cmd = manager === 'yarn' ? 'global add' : 'install -g';
-            if (!skills[0].installed) {
+            
+            const caveman = skills.find(s => s.name === 'caveman');
+            if (caveman && !caveman.installed) {
                 log.info("Installing caveman...");
                 try {
                     execSync('claude plugin marketplace add JuliusBrussee/caveman', { stdio: 'ignore' });
@@ -99,28 +130,48 @@ async function setup() {
                     else execSync('curl -s https://raw.githubusercontent.com/JuliusBrussee/caveman/main/hooks/install.sh | bash', { stdio: 'ignore' });
                 }
             }
-            if (!skills[1].installed) {
+
+            const cavemem = skills.find(s => s.name === 'cavemem');
+            if (cavemem && !cavemem.installed) {
                 log.info("Installing cavemem...");
                 execSync(`${manager} ${cmd} cavemem`, { stdio: 'ignore' });
                 try { execSync('cavemem install', { stdio: 'ignore' }); } catch(e) {}
                 log.success("cavemem installed");
             }
-            if (!skills[2].installed) {
+
+            const uipro = skills.find(s => s.name === 'ui-ux-pro-max');
+            if (uipro && !uipro.installed) {
                 log.info("Installing ui-ux-pro-max...");
                 execSync(`${manager} ${cmd} uipro-cli`, { stdio: 'ignore' });
                 try { execSync('uipro init --ai claude --global', { stdio: 'ignore' }); } catch(e) {}
                 log.success("ui-ux-pro-max installed");
             }
+
+            const rtk = skills.find(s => s.name === 'rtk');
+            if (rtk && !rtk.installed) {
+                log.info("Installing rtk...");
+                try {
+                    execSync('cargo install --git https://github.com/rtk-ai/rtk', { stdio: 'inherit' });
+                    execSync('rtk init -g', { stdio: 'inherit' });
+                    log.success("rtk installed");
+                } catch (e) {
+                    log.error("Failed to install rtk");
+                }
+            }
         }
     }
 
     log.step("Project Configuration");
-    const target = path.resolve((await ask("Target directory path (default: .)")) || ".");
     if (!fs.existsSync(target)) fs.mkdirSync(target, { recursive: true });
 
     const fetchItems = async (dir) => {
-        const r = await fetch(`${API_URL}/${dir}?ref=${BRANCH}`, { headers: { 'User-Agent': 'NodeJS' } });
-        return r.ok ? await r.json() : [];
+        try {
+            const r = await fetch(`${API_URL}/${dir}?ref=${BRANCH}`, { headers: { 'User-Agent': 'NodeJS' } });
+            return r.ok ? await r.json() : [];
+        } catch (e) {
+            log.error(`Failed to fetch ${dir}: ${e.message}`);
+            return [];
+        }
     };
 
     log.info("Fetching rules & skills from GitHub...");
@@ -135,25 +186,34 @@ async function setup() {
 
     log.step("Applying Files");
     const get = async (src, dest) => {
-        const r = await fetch(src);
-        if (r.ok) {
-            const parent = path.dirname(dest);
-            if (!fs.existsSync(parent)) fs.mkdirSync(parent, { recursive: true });
-            fs.writeFileSync(dest, await r.text());
+        try {
+            const r = await fetch(src);
+            if (r.ok) {
+                const parent = path.dirname(dest);
+                if (!fs.existsSync(parent)) fs.mkdirSync(parent, { recursive: true });
+                fs.writeFileSync(dest, await r.text());
+                return true;
+            }
+        } catch (e) {
+            log.error(`Failed to download ${src}`);
         }
+        return false;
     };
 
-    await get(`${RAW_URL}/CLAUDE.md`, path.join(target, "CLAUDE.md"));
-    log.success("CLAUDE.md");
+    if (await get(`${RAW_URL}/CLAUDE.md`, path.join(target, "CLAUDE.md"))) {
+        log.success("CLAUDE.md");
+    }
 
     for (const r of selectedRules) {
-        await get(`${RAW_URL}/.claude/rules/${r}.md`, path.join(target, ".claude", "rules", `${r}.md`));
-        log.success(`Rule: ${r}`);
+        if (await get(`${RAW_URL}/.claude/rules/${r}.md`, path.join(target, ".claude", "rules", `${r}.md`))) {
+            log.success(`Rule: ${r}`);
+        }
     }
 
     for (const s of selectedSkills) {
-        await get(`${RAW_URL}/.claude/skills/${s}/SKILL.md`, path.join(target, ".claude", "skills", s, "SKILL.md"));
-        log.success(`Skill: ${s}`);
+        if (await get(`${RAW_URL}/.claude/skills/${s}/SKILL.md`, path.join(target, ".claude", "skills", s, "SKILL.md"))) {
+            log.success(`Skill: ${s}`);
+        }
     }
 
     console.log(`\n${C.bold}${C.green}✨ Setup complete!${C.rst}\n`);
