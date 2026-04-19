@@ -1,6 +1,6 @@
 # Claude Code Stack (Personal Sandbox)
 
-This is my personal workspace for testing and refining [Claude Code](https://code.anthropic.com/) configurations. I use this repository to organize my project instructions, rules, and automation scripts.
+This is my personal workspace for testing and refining [Claude Code](https://code.anthropic.com/) configurations. I use this repository to organize my project instructions, rules, and agentic workflows.
 
 ## 🚀 Quick Bootstrap
 
@@ -18,40 +18,38 @@ node -e "fetch('https://raw.githubusercontent.com/szerookii/claude-code-stack/ma
 
 ## 🎯 Main Features
 
-This setup is built to automate the repetitive parts of project initialization:
+This setup automates the repetitive parts of project initialization:
 
-- **Interactive Setup**: A CLI to pick exactly which rules to apply to a project.
-- **Environment Check**: Verifies if Claude Code is installed and helps set it up if needed.
-- **Skill Integration**: Optional installation for my experimental tools:
+- **Interactive Setup**: A CLI to pick exactly which rules and **custom skills** to apply.
+- **Environment Check**: Verifies if Claude Code is installed and helps set it up.
+- **Skill Laboratory**: Optional integration for experimental tools:
   - `caveman`: Token compression for terser communication.
   - `cavemem`: Local memory for cross-session context.
   - `ui-ux-pro-max`: Design intelligence for UI generation.
-- **Structured Rules**: 10+ rule files (`.claude/rules/`) formatted for Claude Code.
+- **Structured Knowledge**: 10+ rule files (`.claude/rules/`) and custom skills (`.claude/skills/`).
 
 ## 🤖 Agentic Workflow
 
-This configuration encourages Claude to act as an orchestrator by using delegation:
+This configuration transforms Claude into an orchestrator:
 
-1. **Strategic Delegation**: Deep research is handled by `codebase_investigator`, and batch tasks (3+ files) by the `generalist` sub-agent.
-2. **Compression**: Uses `caveman` to prioritize code and technical results over long conversations.
-3. **Context Sync**: Uses `cavemem` to maintain facts and decisions across different agent sessions.
+1. **Strategic Delegation**: Research is handled by `codebase_investigator`, and batch tasks (3+ files) by the `generalist` sub-agent.
+2. **On-Demand Skills**: Custom skills like `/atomic-commit` are loaded only when needed to save context.
+3. **Context Sync**: Uses `cavemem` to maintain facts and decisions across sessions.
 
-## 🛠️ Rule Arsenal
+## 🛠️ Rule & Skill Arsenal
 
-| Rule | Focus |
+| Rule/Skill | Focus |
 | :--- | :--- |
+| **atomic-commit** (Skill) | Logical breakdown of changes into atomic commits. |
 | **typescript.md** | Type safety and Svelte 5 Runes. |
 | **svelte.md** | SvelteKit patterns and Tailwind tokens. |
 | **golang.md** | Idiomatic Go and error handling. |
-| **git-conventions.md** | Atomic commits and Conventional Commits. |
 | **security.md** | Basic security standards and validation. |
 | **performance.md** | Optimization and resource efficiency. |
 | **database.md** | Migrations and indexing. |
 | **testing.md** | Table-driven tests (Go) and Vitest (TS). |
 | **devops.md** | Docker builds and CI workflows. |
-| **javascript.md** | Modern ES6+ standards and JSDoc. |
-| **prisma.md** | Schema patterns and client singletons. |
-| **drizzle.md** | Type-safe inference and schema organization. |
+| **prisma.md** / **drizzle.md** | ORM schema patterns and best practices. |
 
 ## 📄 License
 

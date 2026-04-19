@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const REPO = "szerookii/claude-code-stack";
 const BRANCH = "main";
 const RAW_URL = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
-const API_URL = `https://api.github.com/repos/${REPO}/contents/.claude/rules?ref=${BRANCH}`;
+const API_URL = `https://api.github.com/repos/${REPO}/contents`;
 
 const C = { rst: '\x1b[0m', dim: '\x1b[2m', bold: '\x1b[1m', cyan: '\x1b[36m', green: '\x1b[32m', yellow: '\x1b[33m', red: '\x1b[31m' };
 const log = {
@@ -62,8 +62,7 @@ async function setup() {
     let manager = "npm";
     
     log.step("Checking Environment");
-    const hasClaude = isInstalled('claude -v');
-    if (hasClaude) log.success("Claude Code is installed");
+    if (isInstalled('claude -v')) log.success("Claude Code is installed");
     else {
         log.warn("Claude Code is not installed");
         if ((await ask("Install Claude Code now? (y/n)")).toLowerCase() === 'y') {
@@ -72,10 +71,10 @@ async function setup() {
         }
     }
 
-    log.step("Checking Skills");
+    log.step("Checking Skills & Plugins");
     const skills = [
         { name: 'caveman', check: 'claude plugin list', installed: false },
-        { name: 'cavemem', check: 'cavemem -V', installed: false },
+        { name: 'cavemem', check: 'cavemem -v', installed: false },
         { name: 'ui-ux-pro-max', check: 'uipro --version', installed: false }
     ];
 
@@ -87,7 +86,7 @@ async function setup() {
 
     const missingSkills = skills.filter(s => !s.installed).map(s => s.name);
     if (missingSkills.length > 0) {
-        if ((await ask(`Install missing skills (${missingSkills.join(', ')})? (y/n)`)).toLowerCase() === 'y') {
+        if ((await ask(`Install missing tools (${missingSkills.join(', ')})? (y/n)`)).toLowerCase() === 'y') {
             const cmd = manager === 'yarn' ? 'global add' : 'install -g';
             if (!skills[0].installed) {
                 log.info("Installing caveman...");
@@ -119,27 +118,42 @@ async function setup() {
     const target = path.resolve((await ask("Target directory path (default: .)")) || ".");
     if (!fs.existsSync(target)) fs.mkdirSync(target, { recursive: true });
 
-    process.stdout.write(`${C.cyan}ℹ${C.rst} Fetching rules...`);
-    let rules = [];
-    try {
-        const r = await fetch(API_URL, { headers: { 'User-Agent': 'NodeJS' } });
-        const d = await r.json();
-        rules = d.filter(f => f.name.endsWith('.md')).map(f => f.name.replace('.md', ''));
-        process.stdout.write(`\r\x1b[K${C.green}✔${C.rst} Fetched ${rules.length} rules\n`);
-    } catch(e) { process.stdout.write(`\r\x1b[K${C.red}✖${C.rst} Failed to fetch rules\n`); process.exit(1); }
+    const fetchItems = async (dir) => {
+        const r = await fetch(`${API_URL}/${dir}?ref=${BRANCH}`, { headers: { 'User-Agent': 'NodeJS' } });
+        return r.ok ? await r.json() : [];
+    };
 
-    const selected = await select("Which rules do you want to install?", rules, true);
+    log.info("Fetching rules & skills from GitHub...");
+    const rulesData = await fetchItems(".claude/rules");
+    const skillsData = await fetchItems(".claude/skills");
+
+    const rules = rulesData.filter(f => f.name.endsWith('.md')).map(f => f.name.replace('.md', ''));
+    const customSkills = skillsData.filter(f => f.type === 'dir').map(f => f.name);
+
+    const selectedRules = await select("Select rules to install:", rules, true);
+    const selectedSkills = await select("Select custom skills to install:", customSkills, true);
 
     log.step("Applying Files");
-    const get = async (src, dest, name) => {
+    const get = async (src, dest) => {
         const r = await fetch(src);
-        if (r.ok) { fs.writeFileSync(dest, await r.text()); log.success(name); }
+        if (r.ok) {
+            const parent = path.dirname(dest);
+            if (!fs.existsSync(parent)) fs.mkdirSync(parent, { recursive: true });
+            fs.writeFileSync(dest, await r.text());
+        }
     };
-    await get(`${RAW_URL}/CLAUDE.md`, path.join(target, "CLAUDE.md"), "CLAUDE.md");
-    if (selected.length > 0) {
-        const rDir = path.join(target, ".claude", "rules");
-        if (!fs.existsSync(rDir)) fs.mkdirSync(rDir, { recursive: true });
-        for (const r of selected) await get(`${RAW_URL}/.claude/rules/${r}.md`, path.join(rDir, `${r}.md`), `.claude/rules/${r}.md`);
+
+    await get(`${RAW_URL}/CLAUDE.md`, path.join(target, "CLAUDE.md"));
+    log.success("CLAUDE.md");
+
+    for (const r of selectedRules) {
+        await get(`${RAW_URL}/.claude/rules/${r}.md`, path.join(target, ".claude", "rules", `${r}.md`));
+        log.success(`Rule: ${r}`);
+    }
+
+    for (const s of selectedSkills) {
+        await get(`${RAW_URL}/.claude/skills/${s}/SKILL.md`, path.join(target, ".claude", "skills", s, "SKILL.md"));
+        log.success(`Skill: ${s}`);
     }
 
     console.log(`\n${C.bold}${C.green}✨ Setup complete!${C.rst}\n`);
